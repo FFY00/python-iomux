@@ -1,0 +1,29 @@
+[build-system]
+build-backend = 'trampolim'
+requires = ['trampolim']
+
+[project]
+name = 'iomux'
+version = '0.1.0'
+description = 'IO buffer multiplexer'
+readme = 'README.md'
+requires-python = '>=3.5'
+license = { file = 'LICENSE' }
+keywords = ['io', 'multiplexer', 'mux', 'bytesio', 'stringio', 'process', 'capture']
+authors = [
+  { name = 'Filipe Laíns', email = 'lains@riseup.net' },
+]
+classifiers = [
+  'Development Status :: 4 - Beta',
+  'Programming Language :: Python'
+]
+
+[project.optional-dependencies]
+test = [
+  'pytest',
+  'pytest-cov',
+]
+
+[project.urls]
+homepage = 'https://github.com/FFY00/python-iomux'
+repository = 'https://github.com/FFY00/python-iomux'
