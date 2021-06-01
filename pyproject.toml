@@ -31,3 +31,5 @@ docs = [
 [project.urls]
 homepage = 'https://github.com/FFY00/python-iomux'
 repository = 'https://github.com/FFY00/python-iomux'
+documentation = 'https://iomux.readthedocs.io'
+changelog = 'https://iomux.readthedocs.io/en/latest/changelog.html'
