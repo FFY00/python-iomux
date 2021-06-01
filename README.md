@@ -3,6 +3,7 @@
 [![checks](https://github.com/FFY00/python-iomux/actions/workflows/checks.yml/badge.svg)](https://github.com/FFY00/python-iomux/actions/workflows/checks.yml)
 [![tests](https://github.com/FFY00/python-iomux/actions/workflows/tests.yml/badge.svg)](https://github.com/FFY00/python-iomux/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/FFY00/python-iomux/branch/main/graph/badge.svg?token=b8Sp012QO7)](https://codecov.io/gh/FFY00/python-iomux)
+[![Documentation Status](https://readthedocs.org/projects/iomux/badge/?version=latest)](https://iomux.readthedocs.io/en/latest/?badge=latest)
 
 IO buffer multiplexer.
 
