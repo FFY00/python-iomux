@@ -6,7 +6,7 @@ import io
 import typing
 
 
-if typing.TYPE_CHECKING:
+if typing.TYPE_CHECKING:  # pragma: no cover
     from typing import Any, Iterator, List, Optional, Tuple, Type, Union
 
 
