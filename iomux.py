@@ -7,22 +7,22 @@ import typing
 
 
 if typing.TYPE_CHECKING:
-    from typing import Any, ClassVar, Iterator, List, Optional, Tuple, Type
+    from typing import Any, Iterator, List, Optional, Tuple, Type, Union
 
 
 T = typing.TypeVar('T', bound=io.IOBase)
+# same as T but we need it becuase we use it in a different class
+V = typing.TypeVar('V', bound=io.IOBase)
 
 
 class IOMux(typing.Generic[T]):
-    _io_cls: ClassVar[Type[T]]
-
-    class Proxy():
-        def __init__(self, owner: IOMux, name: str) -> None:
+    class Proxy(typing.Generic[V]):
+        def __init__(self, owner: IOMux[V], name: str) -> None:
             self._owner = owner
             self._name = name
 
         @property
-        def _io(self) -> T:
+        def _io(self) -> V:
             if not self._owner._io or self._owner._io[-1][0] != self._name:
                 self._owner._io.append((self._name, self._owner._io_cls()))
             return self._owner._io[-1][1]
@@ -30,14 +30,13 @@ class IOMux(typing.Generic[T]):
         def __getattr__(self, name: str) -> Any:
             return getattr(self._io, name)
 
-    def __init_subclass__(cls, io_cls: Type[T]) -> None:
-        cls._io_cls = io_cls
-
-    def __init__(self):
-        assert self._io_cls
+    def __init__(self) -> None:
+        self._io_cls: Type[T] = self.__orig_bases__[0].__args__[0]
         self._io: List[Tuple[str, T]] = []
 
-    def __getattr__(self, name: str) -> Proxy:
+    def __getattr__(self, name: str) -> Any:
+        if name.startswith('_'):
+            raise self.__getattribute__(name)
         return self.Proxy(self, name)
 
     @typing.overload
@@ -46,7 +45,7 @@ class IOMux(typing.Generic[T]):
     @typing.overload
     def entries(self, name: str) -> Iterator[T]: ...
 
-    def entries(self, name: Optional[str] = None):
+    def entries(self, name: Optional[str] = None) -> Union[Iterator[Tuple[str, T]], Iterator[T]]:
         if name is None:
             yield from self._io
         for io_name, io_obj in self._io:
@@ -54,7 +53,7 @@ class IOMux(typing.Generic[T]):
                 yield io_obj
 
 
-class BytesMux(IOMux, io_cls=io.BytesIO):
+class BytesMux(IOMux[io.BytesIO]):
     def getvalue(self, name: Optional[str] = None) -> bytes:
         if name:
             return b''.join(io_obj.getvalue() for io_obj in self.entries(name))
@@ -68,7 +67,7 @@ class BytesMux(IOMux, io_cls=io.BytesIO):
             yield io_name, io_obj.getvalue()
 
 
-class StringMux(IOMux, io_cls=io.StringIO):
+class StringMux(IOMux[io.StringIO]):
     def getvalue(self, name: Optional[str] = None) -> str:
         if name:
             return ''.join(io_obj.getvalue() for io_obj in self.entries(name))

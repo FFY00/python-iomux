@@ -7,7 +7,7 @@ name = 'iomux'
 version = '0.1.0'
 description = 'IO buffer multiplexer'
 readme = 'README.md'
-requires-python = '>=3.5'
+requires-python = '>=3.7'
 license = { file = 'LICENSE' }
 keywords = ['io', 'multiplexer', 'mux', 'bytesio', 'stringio', 'process', 'capture']
 authors = [
