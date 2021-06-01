@@ -23,6 +23,10 @@ test = [
   'pytest',
   'pytest-cov',
 ]
+docs = [
+  'furo>=2021.04.11b34',
+  'sphinx~=3.0',
+]
 
 [project.urls]
 homepage = 'https://github.com/FFY00/python-iomux'

@@ -19,7 +19,22 @@ _V = typing.TypeVar('_V', bound=io.IOBase)
 
 
 class IOMux(typing.Generic[_T]):
+    '''IO buffer multiplexer.
+
+    Receives a :py:class:`io.IOBase` as a generic argument and can create proxy
+    IO objects that multiplex the values. This makes it possible to keep the
+    ordering between IO objects, which is useful if you are for eg. capturing
+    stdout and stderr and want to be able to replay the output in the correct
+    order.
+    '''
+
     class Proxy(typing.Generic[_V]):
+        '''IO object proxy.
+
+        Will make sure a IO object for correspondent entry is at the top of the
+        stack, and proxy all instance attributes, including methods, from that
+        object.'''
+
         def __init__(self, owner: IOMux[_V], name: str) -> None:
             self._owner = owner
             self._name = name
@@ -42,10 +57,12 @@ class IOMux(typing.Generic[_T]):
         return self.Proxy(self, name)
 
     @typing.overload
-    def entries(self) -> Iterator[Tuple[str, _T]]: ...
+    def entries(self) -> Iterator[Tuple[str, _T]]:
+        '''Generator that provides tuples containing the entry name and IO buffer.'''
 
     @typing.overload
-    def entries(self, name: str) -> Iterator[_T]: ...
+    def entries(self, name: str) -> Iterator[_T]:
+        '''Generator that provides the IO buffers for a given entry.'''
 
     def entries(self, name: Optional[str] = None) -> Union[Iterator[Tuple[str, _T]], Iterator[_T]]:
         if name is None:
@@ -56,7 +73,10 @@ class IOMux(typing.Generic[_T]):
 
 
 class BytesMux(IOMux[io.BytesIO]):
+    ''':py:class:`io.BytesIO` multiplexer.'''
+
     def getvalue(self, name: Optional[str] = None) -> bytes:
+        '''Returns the joined value from all buffers.'''
         if name:
             return b''.join(io_obj.getvalue() for io_obj in self.entries(name))
         return b''.join(
@@ -65,12 +85,16 @@ class BytesMux(IOMux[io.BytesIO]):
         )
 
     def values(self) -> Iterator[Tuple[str, bytes]]:
+        '''Generator that provides tuples containing the entry name and IO buffer value.'''
         for io_name, io_obj in self._io:
             yield io_name, io_obj.getvalue()
 
 
 class StringMux(IOMux[io.StringIO]):
+    ''':py:class:`io.StringIO` multiplexer.'''
+
     def getvalue(self, name: Optional[str] = None) -> str:
+        '''Returns the joined value from all buffers.'''
         if name:
             return ''.join(io_obj.getvalue() for io_obj in self.entries(name))
         return ''.join(
@@ -79,5 +103,6 @@ class StringMux(IOMux[io.StringIO]):
         )
 
     def values(self) -> Iterator[Tuple[str, str]]:
+        '''Generator that provides tuples containing the entry name and IO buffer value.'''
         for io_name, io_obj in self._io:
             yield io_name, io_obj.getvalue()
