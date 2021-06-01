@@ -32,6 +32,7 @@ class IOMux(typing.Generic[_T]):
 
     def __init__(self) -> None:
         self._io_cls: Type[_T] = self.__orig_bases__[0].__args__[0]
+        assert self._io_cls
         self._io: List[Tuple[str, _T]] = []
 
     def __getattr__(self, name: str) -> Any:
