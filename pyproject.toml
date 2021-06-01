@@ -4,7 +4,7 @@ requires = ['trampolim']
 
 [project]
 name = 'iomux'
-version = '0.1.0'
+version = '0.2.0'
 description = 'IO buffer multiplexer'
 readme = 'README.md'
 requires-python = '>=3.7'

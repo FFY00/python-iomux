@@ -10,7 +10,7 @@ if typing.TYPE_CHECKING:  # pragma: no cover
     from typing import Any, Iterator, List, Optional, Tuple, Type, Union
 
 
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 
 _T = typing.TypeVar('_T', bound=io.IOBase)
