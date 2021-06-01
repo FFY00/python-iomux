@@ -35,8 +35,6 @@ class IOMux(typing.Generic[T]):
         self._io: List[Tuple[str, T]] = []
 
     def __getattr__(self, name: str) -> Any:
-        if name.startswith('_'):
-            raise self.__getattribute__(name)
         return self.Proxy(self, name)
 
     @typing.overload
