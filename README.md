@@ -7,6 +7,11 @@
 
 IO buffer multiplexer.
 
+Currently, the only use-case that is supported is if the IO object user does not need to read from it.
+IO objects will only be able to read the last data segment. With time, we want to grow this package to
+support use-cases where the IO object user also wants to perform read operations. Right now, read
+operations only work as expected in the multiplexer object itself.
+As-is, this is useful for working with output streams, but not normal file-descriptors.
 
 ```python
 import sys
