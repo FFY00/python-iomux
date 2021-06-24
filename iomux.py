@@ -67,9 +67,10 @@ class IOMux(typing.Generic[_T]):
     def entries(self, name: Optional[str] = None) -> Union[Iterator[Tuple[str, _T]], Iterator[_T]]:
         if name is None:
             yield from self._io
-        for io_name, io_obj in self._io:
-            if io_name == name:
-                yield io_obj
+        else:
+            for io_name, io_obj in self._io:
+                if io_name == name:
+                    yield io_obj
 
 
 class BytesMux(IOMux[io.BytesIO]):
